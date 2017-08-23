@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!--
+    <script type="text/javascript" src="parsertest.js"></script>
+    <link href="calc.css" rel="stylesheet" type="text/css">
+  -->
+
+    <style>
+    body {
+      background-image: -moz-radial-gradient(center, circle closest-corner, #353863 0%, #000 100%);
+      background-image: -o-radial-gradient(center, circle closest-corner, #353863 0%, #000 100%);
+      background-image: -webkit-radial-gradient(center, circle closest-corner, #353863 0%, #000 100%);
+      -webkit-user-select:none;
+      -moz-user-select:none;
+      -ms-user-select:none;
+      -o-user-select:none;
+      user-select:none;
+    }
+    .calculator{
+      width:240px;
+      height:auto;
+      margin:3% auto;
+      background:rgb(100,130,150);
+      border-radius:20px;
+      -moz-box-shadow:inset 0 0 12px #FFF,
+      inset 0px 1px #E6E6E6, 0 1px 1px #323643,
+      inset 0px 1px #7b839b, 0 2px 5px rgba(0,0,0,.5);
+      -webkit-box-shadow:inset 0 0 12px #FFF,
+      inset 0px 1px #E6E6E6, 0 1px 1px #323643,
+      inset 0px 1px #7b839b, 0 2px 5px rgba(0,0,0,.5);
+      box-shadow:inset 0 0 12px #FFF,
+      inset 0px 1px #E6E6E6, 0 1px 1px #323643,
+      inset 0px 1px #7b839b, 0 2px 5px rgba(0,0,0,.5);
+    }
+    .screen{
+      width:86%;
+      height:54px;
+      margin:20px 0px 0px 12px;
+      padding-right:9px;
+      background:#858585;
+      text-align:right;
+      border-radius:6px;
+      border:1px solid #6B6B6B;
+      font-size:18px;
+      font:"Trebuchet MS", Arial, Helvetica, sans-serif;
+      -moz-box-shadow:inset 0 0 10px #333,
+      inset 0 1px 1px #0A0B0D, 0px 1px #E6E6E6;
+      -webkit-box-shadow:inset 0 0 10px #333,
+      inset 0 1px 1px #0A0B0D, 0px 1px #E6E6E6;
+      box-shadow:inset 0 0 10px #333,
+      inset 0 1px 1px #0A0B0D, 0px 1px #E6E6E6;
+    }
+    .screen:focus{
+      outline:none;
+    }
+    .buttons{
+      width:220px;
+      margin:12px;
+    }
+    .buttons button{
+      width:45px;
+      height:45px;
+      padding:0;
+      margin:0px 0px 10px 5px;
+      border:1px solid #333;
+      border-radius:6px;
+      color:#CCC;
+      font:24px "Trebuchet MS", Arial, Helvetica, sans-serif;
+      line-height: 45px;
+      -moz-box-shadow:inset 0 0 10px #666,
+      inset 0px 1px #BCD6FF, 0 1px 1px #323643;
+      -webkit-box-shadow:inset 0 0 10px #666,
+      inset 0px 1px #BCD6FF, 0 1px 1px #323643;
+      box-shadow:inset 0 0 10px #666,
+      inset 0px 1px #BCD6FF, 0 1px 1px #323643;
+      background:#333;
+    }
+    .buttons button:active {
+      color:#FFF;
+      border:1px solid #333;
+      -moz-box-shadow:inset 0 1px 1px #0A0B0D, 0px 1px #E6E6E6;
+      -webkit-box-shadow:inset 0 1px 1px #000, 0px 1px #E6E6E6;
+      box-shadow:inset 0 1px 1px #000, 0px 1px #E6E6E6;
+    }
+    #clear{
+      background-color:#d02200;
+      border:1px solid #d02200;
+      -moz-box-shadow:inset 0 0 10px #F63,
+      inset 0px 1px #BCD6FF, 0 1px 1px #323643;
+      -webkit-box-shadow:inset 0 0 10px #F63,
+      inset 0px 1px #BCD6FF, 0 1px 1px #323643;
+      box-shadow:inset 0 0 10px #F63,
+      inset 0px 1px #BCD6FF, 0 1px 1px #323643;
+
+    }
+    #clear:active{
+      border:1px solid #d02200;
+      -moz-box-shadow:inset 0 1px 1px #0A0B0D, 0px 1px #E6E6E6;
+      -webkit-box-shadow:inset 0 1px 1px #0A0B0D, 0px 1px #E6E6E6;
+      box-shadow:inset 0 1px 1px #0A0B0D, 0px 1px #E6E6E6;
+    }
+    #equal{
+      width:100px;
+      background-color: #036;
+      border:1px solid #036;
+      -moz-box-shadow:inset 0 0 10px #069,
+      inset 0px 1px #BCD6FF, 0 1px 1px #323643;
+      -webkit-box-shadow:inset 0 0 10px #069,
+      inset 0px 1px #BCD6FF, 0 1px 1px #323643;
+      box-shadow:inset 0 0 10px #069,
+      inset 0px 1px #BCD6FF, 0 1px 1px #323643;
+    }
+    #equal:active{
+      border:1px solid #039;
+      -moz-box-shadow:inset 0 1px 1px #0A0B0D, 0px 1px #E6E6E6;
+      -webkit-box-shadow:inset 0 1px 1px #0A0B0D, 0px 1px #E6E6E6;
+      box-shadow:inset 0 1px 1px #0A0B0D, 0px 1px #E6E6E6;
+    }
+    #minus, #plus, #divide, #multiply{
+      background-color: #036;
+      border:1px solid #036;
+      -moz-box-shadow:inset 0 0 10px #069,
+      inset 0px 1px #BCD6FF, 0 1px 1px #323643;
+      -webkit-box-shadow:inset 0 0 10px #069,
+      inset 0px 1px #BCD6FF, 0 1px 1px #323643;
+      box-shadow:inset 0 0 10px #069,
+      inset 0px 1px #BCD6FF, 0 1px 1px #323643;
+    }
+    #minus:active, #plus:active, #divide:active, #multiply:active{
+      border:1px solid #039;
+      -moz-box-shadow:inset 0 1px 1px #0A0B0D, 0px 1px #E6E6E6;
+      -webkit-box-shadow:inset 0 1px 1px #0A0B0D, 0px 1px #E6E6E6;
+      box-shadow:inset 0 1px 1px #0A0B0D, 0px 1px #E6E6E6;
+    }
+    </style>
+  </head>
+
+  <body>
+
+    <div class="calculator">
+    <input id="screen" class="screen" value=""/>
+	  <div class="buttons">
+    <button id="clear">C</button>
+    <button id="backspace">del</button>
+    <button id="ans">ans</button>
+    <button id="divide" value="/">/</button>
+    <button class="digit" value="7">7</button>
+    <button class="digit" value="8">8</button>
+    <button class="digit" value="9">9</button>
+    <button id="multiply" value="*">x</button>
+    <button class="digit" value="4">4</button>
+    <button class="digit" value="5">5</button>
+    <button class="digit" value="6">6</button>
+    <button id="minus" value="-">-</button>
+    <button class="digit" value="1" >1</button>
+    <button class="digit" value="2">2</button>
+    <button class="digit" value="3">3</button>
+    <button id="plus" value="+">+</button>
+    <button class="digit" value="0">0</button>
+    <button class="digit" value=".">.</button>
+    <button id="equal" value="=">=</button>
+    <button id="right_bracket"　value="(">(</button>
+    <button id="left_bracket"　value=")">)</button>
+    <button id="mo"　value="%">%</button>
+    </div>
+    </div>
+    <script>
+
+    //exp type : Expression
+    function parseExp(scanner) {
+      var exp = readE(scanner);
+      if (scanner.hasMoreTokens()) {
+         //STUB error message
+      }
+        return exp;              // The function returns the product of p1 and p2
+    }
+
+    function readE(scanner, prec=0){
+      var exp = readT(scanner);//return type Expression
+      var token="";
+      while (true) {
+        //console.log("arr:"+scanner.savedTokens);
+         token = scanner.nextToken();//shold be operator +*/-
+         var newPrec = precedence(token);
+         if (newPrec <= prec) break;
+         var rhs = readE(scanner, newPrec);
+         exp =new CompoundExp(token, exp, rhs);
+      }
+      scanner.pushFront(token);//push back token
+      return exp;
+    }
+
+    function readT(scanner){
+      var token = scanner.nextToken();
+      var type = scanner.getTokenType(token);
+      //console.log(": "+token+" "+type);
+      if (type == "WORD") return new IdentifierExp(token);
+      if (type == "NUMBER") return new ConstantExp(token*1);
+      if (type != "("){ var error="";return ;}//STUB error message cout<<"Illegal term in expression"<<endl;
+      var exp = readE(scanner);// ( の後の処理
+      if (scanner.nextToken() != ")") {
+        //STUB error message
+         //cout<<"Unbalanced parentheses in expression"<<endl;
+      }
+      return exp;//exp;//end of line
+    }
+
+    function precedence(token){
+      if (token == "+" || token == "-") return 2;
+      if (token == "*" || token == "/" || token == "%") return 3;
+      return 0;
+    }
+
+//******************************************************************************
+    function TokenScanner(str) {
+        this.str = str;
+        this.savedTokens=[];
+        this.processLine=function(){
+          while(this.str.length){
+            var ch=this.str[0];
+            this.str=this.str.substr(1);
+
+            //-5 *
+            if(!this.savedTokens.length){
+              if(this.isOperator(ch)){
+                  var buf=ch;
+                  ch=this.str[0];
+                  this.str=this.str.substr(1);
+                  while(true){
+                  buf+=ch;
+                  ch=this.str[0];
+                  if(!this.isNumber(ch))break;
+                  this.str=this.str.substr(1);
+                  }
+                  this.saveToken(buf);
+                  continue;
+              }
+            }
+
+            if(this.isOperator(ch)){
+              this.saveToken(ch);
+              //* -5
+              ch=this.str[0];
+              if(ch=="+"||ch=="-"){
+                this.str=this.str.substr(1);
+                var buf="";
+                while(true){
+                buf+=ch;
+                ch=this.str[0];
+                if(!this.isNumber(ch))break;
+                this.str=this.str.substr(1);
+                }
+                this.saveToken(buf);
+              }
+            }else if(this.isLp(ch)){
+              this.saveToken(ch);
+              //* -5
+              ch=this.str[0];
+              if(ch=="+"||ch=="-"){
+                this.str=this.str.substr(1);
+                var buf="";
+                while(true){
+                buf+=ch;
+                ch=this.str[0];
+                if(!this.isNumber(ch))break;
+                this.str=this.str.substr(1);
+                }
+                this.saveToken(buf);
+              }
+            }else if(this.isRp(ch)){
+              this.saveToken(ch);
+            }else if(this.isNumber(ch)){
+              var buf="";
+              while(true){
+              buf+=ch;
+              ch=this.str[0];
+              if(!this.isNumber(ch))break;
+              this.str=this.str.substr(1);
+              }
+              this.saveToken(buf);
+            }else if(this.isWord(ch)){
+              var buf="";
+              while(true){
+              buf+=ch;
+              ch=this.str[0];//this.str.charAt(0);
+              if(!this.isWord(ch))break;
+              this.str=this.str.substr(1);
+              }
+              this.saveToken(buf);
+            }
+
+          }
+
+        };
+        this.nextToken = function () {
+          var token=this.savedTokens[0];
+          if(token==undefined)return"";//*********************************
+          this.savedTokens.shift();
+          return token;
+        };
+        this.saveToken=function(token){
+          this.savedTokens.push(token);
+        };
+        this.isWord=function(ch){
+            if(ch==undefined)return false;
+
+            if(!this.isNumber(ch))
+              if(!this.isOperator(ch))
+                if(!this.isLp(ch))
+                  if(!this.isRp(ch))
+                    return true;
+            return false;
+        };
+        this.isNumber=function(ch){
+          if(ch==undefined)return false;
+          if( (ch*1>=0 || ch*1<=9 || ch=='.'))return true;
+          else return false;
+        };
+        this.isOperator=function(ch){
+          if(ch==undefined)return false;
+          if( ch=="+" || ch=="-" || ch=="*" || ch=="/" || ch=="%")return true;
+          else return false;
+        };
+        this.isLp=function(ch){
+          if(ch==undefined)return false;
+          if(ch=="(")return true;
+          else false;
+        };
+        this.isRp=function(ch){
+          if(ch==undefined)return false;
+          if(ch==")")return true;
+          else false;
+        };
+        this.hasMoreTokens = function () {
+            return !(this.savedTokens.length==0);
+        };
+        this.getTokenType=function(token){
+          if(this.isNumber(token[0]))return "NUMBER";
+          if(token[0]=="-"||token[0]=="+")
+            if(this.isNumber(token[1]))return "NUMBER";//?????????????????????????????????????
+          if(this.isWord(token[0]))return "WORD";
+          if(this.isLp(token[0]))return "(";
+          if(this.isRp(token[0]))return ")";
+          if(token=="")return "EOL";
+          else return "ELSE";
+        };
+        this.pushFront=function(token){
+          this.savedTokens.unshift(token);
+        };
+    }
+//******************************************************************************
+
+    function EvalState() {
+        this.map = new Map();
+        this.setValue = function (vari,value) {
+            this.map.set(vari,value);
+        };
+        this.getValue = function (vari) {
+            return this.map.get(vari);
+        };
+        this.isDefined=function(vari){
+          return this.map.get(vari)!=undefined;
+        };
+    }
+
+    function ConstantExp(value) {
+        this.value=value;
+        this.estimates=function(state){
+          return this.value;
+        };
+        this.getType=function(){
+          return "CONSTANT";
+        };
+        this.getValue=function(){
+          return this.value;
+        };
+    }
+
+    function IdentifierExp(name) {
+        this.name=name;
+        this.estimates=function(state){
+          return state.getValue(name);
+        };
+        this.getType=function(){
+          return "IDENTIFIER";
+        };
+        this.getName=function(){
+          return this.name;
+        };
+    }
+
+    function CompoundExp(op, lhs, rhs) {
+        this.op = op;
+        this.lhs = lhs;
+        this.rhs = rhs;
+        this.estimates=function(state){
+          //x = 5;
+          if (op == '=') {
+             if (lhs.getType() != "IDENTIFIER") {
+                //STUB ERROR
+                console.log("Not identifier");
+             }
+             //should be IdentifierExp
+             var val = rhs.estimates(state);
+             state.setValue(lhs.getName(), val);
+             //console.log("odd:"+val);
+             return val;
+          }
+          var left = lhs.estimates(state);
+          var right = rhs.estimates(state);
+          if (op == "+") return left + right;
+          if (op == "-") return left - right;
+          if (op == "*") return left * right;
+          if (op == "/") return left / right;
+          if (op == "%") return left % right;
+          return 0;
+        };
+        this.getType=function(){
+          return "COMPOUND";
+        };
+        this.getOp=function(){
+          return this.op;
+        };
+        this.getLhs=function(){
+          return this.lhs;
+        };
+        this.getRhs=function(){
+          return this.rhs;
+        };
+    }
+//******************************************************************************
+
+//******************************************************************************
+    var state=new EvalState();
+    state.setValue("ans",0);
+    var text="";
+    $( '.digit').click(function() {
+      var dig=$( this ).text();
+
+      //invalid input 0.34.2 see if number contains more than one dot.
+      if(dig=='.'){
+        var i=text.length-1;
+        while(true){
+          if(0<=text[i]*1||text[i]*1<=9||text[i]=='.'){
+            if(text[i]=='.')return;
+          }else
+            break;// pass the number zone of text array
+          --i;
+        }
+      }
+
+      if( dig=='.' && '.'==text.slice(-1) )return;
+      if( dig=='.' && (text.slice(-1).charCodeAt(0)*1<48) )text+='0'+dig;/* .23 -> 0.23 */
+      else if( dig=='.' && (text.slice(-1).charCodeAt(0)*1>57) )text+='0'+dig;
+      else if(dig=='.' && text=="")text+='0'+dig;
+      else text+=dig;
+      num=dig;
+      $( '#screen' ).val( text );
+    });
+    $('#divide,#multiply,#minus,#plus,#right_bracket,#left_bracket').click(function() {
+      text+=$( this ).val();
+      $( '#screen' ).val( text );
+    });
+    $('#equal').click(function() {
+
+      var scanner=new TokenScanner(text);
+      scanner.processLine();
+      var value=parseExp(scanner);
+      var fml=text;
+      text="";
+      var ans=value.estimates(state);
+      state.setValue("ans",ans*1);
+      ans=fml+"= "+ans;
+      $( '#screen' ).val(ans);
+      fml="";
+      ans="";
+    });
+    $('#backspace').click(function() {
+      text = text.substring(0,text.length-1);
+      $( '#screen' ).val( text );
+      /*result();*/
+    });
+    $('#sign').click(function (){
+      var sig=$( this ).text();
+      $( '#screen' ).val( text );
+    });
+    $('#mo').click(function (){
+      text+=$( this ).text();
+      $( '#screen' ).val( text );
+    });
+    $('#right_bracket').click(function (){
+      text+=$( this ).text();
+      $( '#screen' ).val( text );
+    });
+    $('#left_bracket').click(function (){
+      text+=$( this ).text();
+      $( '#screen' ).val( text );
+    });
+
+    $('#ans').click(function (){
+      text+=state.getValue("ans");
+      $( '#screen' ).val( text );
+    });
+    $('#clear').click(function (){
+      text = "";
+      $( '#screen' ).val( text );
+    });
+    </script>
+
+
+  </body>
+</html>
